@@ -34,7 +34,7 @@ export default function SignUp() {
     }
 
     try {
-      const response = await axios.post("http://localhost:4000/signup", formData);
+      const response = await axios.post("https://app-devops-mulesoft.vercel.app/signup", formData);
 
       setSuccessMessage(response.data.message);
       setErrorMessage(""); 
