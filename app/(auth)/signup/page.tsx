@@ -35,7 +35,7 @@ export default function SignUp() {
 
     try {
       const response = await axios.post("https://app-back-deploy.vercel.app/signup", formData);
-
+      window.location.href="/signin"
       setSuccessMessage(response.data.message);
       setErrorMessage(""); 
     } catch (error) {
@@ -43,8 +43,7 @@ export default function SignUp() {
     }
   };
 
-  function goToSignIn(): void {
-    window.location.href="/signin"  }
+
 
   return (
     <section>
@@ -121,7 +120,7 @@ export default function SignUp() {
             <div className="mt-6 space-y-5">
               <button
                 className="btn w-full bg-gradient-to-t from-indigo-600 to-indigo-500 bg-[length:100%_100%] bg-[bottom] text-white shadow-[inset_0px_1px_0px_0px_theme(colors.white/.16)] hover:bg-[length:100%_150%]"
-                type="submit" onClick={goToSignIn}
+                type="submit" 
               >
                 Register
               </button>
