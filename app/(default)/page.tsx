@@ -9,10 +9,12 @@ import Workflows from "@/components/workflows";
 import Features from "@/components/features";
 import Testimonials from "@/components/testimonials";
 import Cta from "@/components/cta";
+// import ProductsPage from "@/components/dashboard";
 
 export default function Home() {
   return (
     <>
+    {/* <ProductsPage /> */}
       <PageIllustration />
       <Hero />
       <Workflows />
