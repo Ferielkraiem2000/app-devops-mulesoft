@@ -323,11 +323,9 @@ export default function SignIn() {
         if(email=="admin@admin.com"){
         window.location.href = "/admin"; }
         else{
-          window.location.href = "/client"; 
+          window.location.href = "/client"; }
         }
-
-      }
-    } catch (err) {
+      } catch (err) {
       setError("Erreur serveur, veuillez réessayer.");
       console.log(err);
     } finally {

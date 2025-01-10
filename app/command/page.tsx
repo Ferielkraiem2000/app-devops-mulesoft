@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { FaHome, FaShoppingCart } from "react-icons/fa";
 import { Box, Typography, FormControl, FormGroup, FormControlLabel, Checkbox, Stepper, Step, StepLabel,Button, DialogActions, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import axios from "axios";
 // import GitHubIcon from "@mui/icons-material/GitHub";
 // import GitLabIcon from "@mui/icons-material/DataObject"; // No official icon, using placeholder
 // import AzureIcon from "@mui/icons-material/Cloud"; // No official icon, using placeholder
@@ -16,18 +17,16 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 // import FolderIcon from '@mui/icons-material/Folder';
 // import StorageIcon from '@mui/icons-material/Storage';
 
-
-
 const AppForm = () => {
     const steps = [
         {
             id: 1,
-            step: "Choose Versioning Tool!",
+            step: "Choose Versioning Tool",
             options: [
-                { label: "github", icon: "fab fa-github" },      // GitHub logo
-                { label: "gitlab", icon: "fab fa-gitlab" },      // GitLab logo
-                { label: "bitbucket", icon: "fab fa-bitbucket" }, // Bitbucket logo
-                { label: "azure", icon: "fab fa-microsoft" },    // Microsoft Azure logo
+                { label: "github", icon: "fab fa-github" },      
+                { label: "gitlab", icon: "fab fa-gitlab" },      
+                { label: "bitbucket", icon: "fab fa-bitbucket" }, 
+                { label: "azure", icon: "fab fa-microsoft" },   
             ],
         },
         {
@@ -52,26 +51,36 @@ const AppForm = () => {
             id: 4,
             step: "Choose Hosting Jar Tool",
             options: [
-                { label: "jfrog", icon: "fas fa-frog" },          // Frog icon for JFrog
-                { label: "nexus", icon: "fas fa-database" },      // Database icon for Nexus
+                { label: "jfrog", icon: "fas fa-frog" },          
+                { label: "nexus", icon: "fas fa-database" },    
             ],
         }
     ];
     
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState("");
-    // Fonction pour gérer la sélection d'une option
-    const handleOptionChange = (option: any) => {
+    const handleOptionChange = (step:any, option: any) => {
         setSelectedOption(option);
-        console.log(option)
-        //setError(""); // Réinitialiser l'erreur lorsqu'un choix est fait
+        if (step === 'Choose Versioning Tool') setSelectedOptionVersioning(option);
+        if (step === 'Choose Hosting Type') setSelectedOptionHosting(option);
+        if (step === 'Choose Monitoring Tool') setSelectedOptionMonitoring(option);
+        if (step === 'Choose Hosting Jar Tool') setSelectedOptionHostingJar(option);
+        console.log("testtttttt",option)
+        console.log("step",step)
+        
       };
     const currentStep = steps[currentStepIndex];
-    //const [activeStep, setActiveStep] = useState(0);
-    const [formData, setFormData] = useState({
-        appName: "",
-        description: "",
-    });
+    const [selectedOptionVersioning, setSelectedOptionVersioning] = useState("");
+    const [selectedOptionHosting, setSelectedOptionHosting] = useState("");
+    const [selectedOptionMonitoring, setSelectedOptionMonitoring] = useState("");
+    const [selectedOptionHostingJar, setSelectedOptionHostingJar] = useState("");
+
+    const dataToSend = {
+        versioningTool: selectedOptionVersioning,
+        hostingType: selectedOptionHosting,
+        monitoringTool: selectedOptionMonitoring,
+        hostingJarTool: selectedOptionHostingJar,
+    };
 
   const handleNext = () => {
     if (selectedOption) {
@@ -87,19 +96,24 @@ const AppForm = () => {
 
   const handleChange = (e:any) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    // setFormData((prevData) => ({
+    //   ...prevData,
+    //   [name]: value,
+    // }));
   };
 
   const [openPopup, setOpenPopup] = useState(false); 
 
 
-  const handleSubmit = () => {
-    console.log("Submitted Data:", formData);
-    setOpenPopup(true); // Open the popup on submit
-  };
+  const handleSubmit = async () => {
+    console.log("Submitting:", dataToSend);
+    try {
+        const response = await axios.post("http://localhost:4000/save-order", dataToSend);
+        console.log(response.data);
+        setOpenPopup(true);
+    } catch (error) {
+        console.error("Error saving order:", error);
+    }  };
 const handleClosePopup = () => {
     setOpenPopup(false); // Close the popup
   };   
@@ -151,7 +165,7 @@ const handleClosePopup = () => {
                                 className={`option ${
                                 selectedOption === step.label ? "selected" : ""
                                 }`}
-                                onClick={() => handleOptionChange(step.label)}
+                                onClick={() => handleOptionChange(currentStep.step,step.label)}
                                 style={{
                                 display: "flex",
                                 alignItems: "center",
@@ -209,14 +223,7 @@ const handleClosePopup = () => {
                 </div>
             </Box>
             </Box>
-        </div>
-
-
-        
-        
-        
-
-        
+        </div>      
 
   );
 };

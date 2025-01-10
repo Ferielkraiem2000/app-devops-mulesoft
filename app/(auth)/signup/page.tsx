@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import axios from "axios"; 
-import Header from "@/components/ui/header";
 
 const metadata = {
   title: "Sign Up - Open PRO",
@@ -29,21 +28,17 @@ export default function SignUp() {
   const handleSubmit = async (e:any) => {
     e.preventDefault();
 
-    // Check if all fields are filled
     if (!formData.name || !formData.companyName || !formData.workEmail || !formData.password) {
       setErrorMessage("Please fill in all fields.");
       return;
     }
 
     try {
-      // Send the POST request to the backend API
       const response = await axios.post("http://localhost:4000/signup", formData);
 
-      // Success handling
       setSuccessMessage(response.data.message);
-      setErrorMessage(""); // Clear any previous error messages
+      setErrorMessage(""); 
     } catch (error) {
-      // Error handling
 
     }
   };
@@ -58,11 +53,9 @@ export default function SignUp() {
             </h1>
           </div>
 
-          {/* Show success/error message */}
           {errorMessage && <div className="text-red-500 text-center">{errorMessage}</div>}
           {successMessage && <div className="text-green-500 text-center">{successMessage}</div>}
 
-          {/* Contact form */}
           <form className="mx-auto max-w-[400px]" onSubmit={handleSubmit}>
             <div className="space-y-5">
               <div>
