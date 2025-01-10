@@ -320,7 +320,7 @@ export default function SignIn() {
       } else {
         setSuccessMessage("Sign in successful!"); 
         console.log("Sign in successful:", data);
-        if(email=="cccc@dmin.com"){
+        if(email=="admin@admin.com"){
         window.location.href = "/admin"; }
         else{
           window.location.href = "/client"; 
