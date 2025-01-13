@@ -79,7 +79,7 @@ export default function OrdersPage() {
                       <td className="p-3 border">{order.monitoringTool || "N/A"}</td>
                       <td className="p-3 border">{order.hostingJarTool || "N/A"}</td>
                       <td className="p-3 border">
-                      <span className={`py-1 px-3 rounded text-white ${order.status === "Active" ? "bg-green-500" : "bg-gray-400"}`}>
+                      <span className={`py-1 px-3 rounded text-white ${order.status === "en attente" ? "bg-green-500" : "bg-gray-400"}`}>
                         {order.status}
                       </span>
                     </td>                          </tr>
