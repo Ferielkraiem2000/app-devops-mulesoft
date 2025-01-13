@@ -44,7 +44,7 @@ export default function ProductsPage() {
           <FaBoxOpen className="text-gray-700 hover:text-blue-500 text-2xl" />
         </div> */}
         <div className="mb-6">
-          <a href="/command"><FaShoppingCart className="text-gray-700 hover:text-blue-500 text-2xl" /></a>
+          <a href="/bookOrder"><FaShoppingCart className="text-gray-700 hover:text-blue-500 text-2xl" /></a>
         </div>
         {/* <div className="mb-6">
           <FaUser className="text-gray-700 hover:text-blue-500 text-2xl" />
