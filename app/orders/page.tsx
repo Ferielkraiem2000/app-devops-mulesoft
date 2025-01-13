@@ -139,6 +139,7 @@ export default function OrdersPage() {
 
   // Accept an order by sending a POST request to the backend
   const handleAcceptOrder = async (orderId: string) => {
+    console.log(orderId)
     try {
       const response = await axios.post(`https://app-back-deploy.vercel.app/accept-order/${orderId}`);
       console.log("Order accepted:", response.data);
