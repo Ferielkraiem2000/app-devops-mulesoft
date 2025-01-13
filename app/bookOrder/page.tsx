@@ -23,36 +23,36 @@ const AppForm = () => {
             id: 1,
             step: "Choose Versioning Tool",
             options: [
-                { label: "github", icon: "fab fa-github" },      
-                { label: "gitlab", icon: "fab fa-gitlab" },      
-                { label: "bitbucket", icon: "fab fa-bitbucket" }, 
-                { label: "azure", icon: "fab fa-microsoft" },   
+                { label: "Github", icon: "fab fa-github" },      
+                { label: "Gitlab", icon: "fab fa-gitlab" },      
+                { label: "Bitbucket", icon: "fab fa-bitbucket" }, 
+                { label: "Azure DevOps", icon: "fab fa-microsoft" },   
             ],
         },
         {
             id: 2,
             step: "Choose Hosting Type",
             options: [
-                { label: "cloudhub", icon: "fas fa-cloud" },     // Cloud icon
-                { label: "onpremise", icon: "fas fa-server" },   // Server icon
+                { label: "Cloudhub2.0", icon: "fas fa-cloud" },     // Cloud icon
+                { label: "On-Premises", icon: "fas fa-server" },   // Server icon
             ],
         },
         {
             id: 3,
             step: "Choose Monitoring Tool",
             options: [
-                { label: "grafana", icon: "fas fa-chart-line" },  // Line chart for Grafana
-                { label: "elk", icon: "fas fa-chart-area" },      // Area chart for ELK
-                { label: "datadog", icon: "fas fa-dog" },         // Dog icon for Datadog
-                { label: "splunk", icon: "fas fa-search" },       // Search icon for Splunk
+                { label: "Grafana", icon: "fas fa-chart-line" },  // Line chart for Grafana
+                { label: "ELK", icon: "fas fa-chart-area" },      // Area chart for ELK
+                { label: "Datadog", icon: "fas fa-dog" },         // Dog icon for Datadog
+                { label: "Splunk", icon: "fas fa-search" },       // Search icon for Splunk
             ],
         },
         {
             id: 4,
             step: "Choose Hosting Jar Tool",
             options: [
-                { label: "jfrog", icon: "fas fa-frog" },          
-                { label: "nexus", icon: "fas fa-database" },    
+                { label: "Jfrog", icon: "fas fa-frog" },          
+                { label: "Nexus", icon: "fas fa-database" },    
             ],
         }
     ];
