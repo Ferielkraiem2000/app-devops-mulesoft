@@ -115,7 +115,7 @@ const AppForm = () => {
         console.error("Error saving order:", error);
     }  };
 const handleClosePopup = () => {
-    setOpenPopup(false); // Close the popup
+    setOpenPopup(false);
   };   
 
   return (

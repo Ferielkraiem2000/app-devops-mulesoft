@@ -1,38 +1,30 @@
 "use client";
-import React from "react";
-import { FaHome, FaBoxOpen, FaShoppingCart, FaCog, FaSearch, FaUser } from "react-icons/fa";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { FaHome, FaBoxOpen, FaCog, FaSearch, FaUser } from "react-icons/fa";
 
-const products = [
-  {
-    id: 1,
-    name: "Smartphone X Pro",
-    image: "/smartphone.jpg", 
-    status: "Active",
-    price: "$999.00",
-    totalSales: 150,
-    createdAt: "6/23/2024",
-  },
-  {
-    id: 2,
-    name: "Wireless Earbuds Ultra",
-    image: "/earbuds.jpg",
-    status: "Active",
-    price: "$199.00",
-    totalSales: 300,
-    createdAt: "6/23/2024",
-  },
-  {
-    id: 3,
-    name: "Smart Home Hub",
-    image: "/smarthome.jpg",
-    status: "Active",
-    price: "$149.00",
-    totalSales: 200,
-    createdAt: "6/23/2024",
-  },
-];
+export default function OrdersPage() {
+  const [orders, setOrders] = useState([]);
 
-export default function ProductsPage() {
+  const getOrders = async () => {
+    try {
+      const response = await axios.get("https://app-back-deploy.vercel.app/orders");
+      return response.data;
+    } catch (error) {
+      console.error("Error getting orders:", error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const fetchedOrders = await getOrders();
+      setOrders(fetchedOrders);
+    };
+
+    fetchOrders();
+  }, []);
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
@@ -43,16 +35,12 @@ export default function ProductsPage() {
         <div className="mb-6">
           <FaBoxOpen className="text-gray-700 hover:text-blue-500 text-2xl" />
         </div>
-        {/* <div className="mb-6">
-          <FaShoppingCart className="text-gray-700 hover:text-blue-500 text-2xl" />
-        </div> */}
         <div className="mb-6">
           <FaUser className="text-gray-700 hover:text-blue-500 text-2xl" />
         </div>
         <div>
           <FaCog className="text-gray-700 hover:text-blue-500 text-2xl" />
         </div>
-
       </div>
 
       {/* Main Content */}
@@ -71,39 +59,35 @@ export default function ProductsPage() {
             </div>
           </div>
 
-          <p className="text-gray-600 mb-6">Manage your products and view their sales performance.</p>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-gray-200 text-left">
-                  <th className="p-3 border" style={{color:"black"}}>Outil CI/CD</th>
-                  <th className="p-3 border" style={{color:"black"}}>Type d'hébergement</th>
-                  <th className="p-3 border" style={{color:"black"}}>Outil de monitoring</th>
-                  <th className="p-3 border" style={{color:"black"}}>Outil d'hébergement des JARs</th>
-                  <th className="p-3 border" style={{color:"black"}}>Statut</th>
+                  <th className="p-3 border" style={{ color: "black" }}>Outil CI/CD</th>
+                  <th className="p-3 border" style={{ color: "black" }}>Type d'hébergement</th>
+                  <th className="p-3 border" style={{ color: "black" }}>Outil de monitoring</th>
+                  <th className="p-3 border" style={{ color: "black" }}>Outil d'hébergement des JARs</th>
+                  <th className="p-3 border" style={{ color: "black" }}>Statut</th>
                 </tr>
               </thead>
               <tbody>
-                {products.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-100">
-                    <td className="p-3 border flex items-center gap-4">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-12 h-12 object-cover rounded"
-                      />
-                      {product.name}
+                {orders.length > 0 ? (
+                  orders.map((order: any, index: number) => (
+                    <tr key={index} className="hover:bg-gray-100">
+                      <td className="p-3 border">{order.versioningTool || "N/A"}</td>
+                      <td className="p-3 border">{order.hostingType || "N/A"}</td>
+                      <td className="p-3 border">{order.monitoringTool || "N/A"}</td>
+                      <td className="p-3 border">{order.hostingJarTool || "N/A"}</td>
+                      <td className="p-3 border">{order.status || "N/A"}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5} className="p-3 border text-center">
+                      No orders found.
                     </td>
-                    <td className="p-3 border">{product.price}</td>
-
-                    <td className="p-3 border">{product.price}</td>
-                    <td className="p-3 border">{product.totalSales}</td>
-                    <td className="p-3 border">
-                      <span className={`py-1 px-3 rounded text-white ${product.status === "Active" ? "bg-green-500" : "bg-gray-400"}`}>
-                        {product.status}
-                      </span>
-                    </td>                  </tr>
-                ))}
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
