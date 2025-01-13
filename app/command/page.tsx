@@ -80,6 +80,7 @@ const AppForm = () => {
         hostingType: selectedOptionHosting,
         monitoringTool: selectedOptionMonitoring,
         hostingJarTool: selectedOptionHostingJar,
+        status: "en attente",
     };
 
   const handleNext = () => {
