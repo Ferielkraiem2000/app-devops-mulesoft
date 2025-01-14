@@ -144,18 +144,20 @@ export default function OrdersPage() {
       const response = await axios.post(`https://app-back-deploy.vercel.app/accept-order/${orderId}`);
       console.log("Order accepted:", response.data);
 
-    //   // Update the order status in the frontend
-    //   setOrders((prevOrders) =>
-    //     prevOrders.map((order) =>
-    //       order._id === orderId ? { ...order, status: "acceptée" } : order
-    //     )
-    //   );
-
-      // Optionally, display the repo URL or success message
       alert(`Order accepted! Repository URL: ${response.data.repoUrl}`);
     } catch (error) {
       console.error("Error accepting order:", error);
       alert("Error accepting order. Please try again.");
+    }
+  };
+  // Cancel an order by sending a POST request to the backend
+  const handleCancelOrder = async (orderId: string) => {
+    console.log(orderId)
+    try {
+      const response = await axios.delete(`https://app-back-deploy.vercel.app/delete-order/${orderId}`);
+      console.log("Order deleted:", response.data);
+    } catch (error) {
+      console.error("Error deleting order:", error);
     }
   };
 
@@ -255,6 +257,7 @@ export default function OrdersPage() {
                             <FaCheck className="mr-2" />
                           </button>
                           <button
+                            onClick={() => handleCancelOrder(order._id)}
                             className="bg-red-500 text-white py-1 px-3 rounded flex items-center"
                           >
                             <FaTimes className="mr-2" />
