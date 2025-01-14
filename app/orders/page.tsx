@@ -155,6 +155,8 @@ export default function OrdersPage() {
     console.log(orderId)
     try {
       const response = await axios.delete(`https://app-back-deploy.vercel.app/delete-order/${orderId}`);
+      const updatedOrders = await getOrders();
+      setOrders(updatedOrders);
       console.log("Order deleted:", response.data);
     } catch (error) {
       console.error("Error deleting order:", error);
