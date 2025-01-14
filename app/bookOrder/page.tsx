@@ -105,7 +105,6 @@ const AppForm = () => {
 
   const [openPopup, setOpenPopup] = useState(false); 
 
-
   const handleSubmit = async () => {
     console.log("Submitting:", dataToSend);
     try {
@@ -115,7 +114,8 @@ const AppForm = () => {
     } catch (error) {
         console.error("Error saving order:", error);
     }  };
-const handleClosePopup = () => {
+  
+  const handleClosePopup = () => {
     setOpenPopup(false);
   };   
 
@@ -141,13 +141,13 @@ const handleClosePopup = () => {
         </div>
 
             <Box style={{}} sx={{ margin: "auto",
-            justifyContent: "center", // Centre horizontalement
-            alignItems: "center",    // Centre verticalement
+            justifyContent: "center", 
+            alignItems: "center", 
             display:"block",
             alignContent:"center",
-    backgroundColor: "white",
-    boxShadow: 3,
-    padding: 3 }}>
+            backgroundColor: "white",
+            boxShadow: 3,
+            padding: 3 }}>
             <Stepper activeStep={currentStepIndex} alternativeLabel>
                 {steps.map((label) => (
                 <Step key={label.id}>
@@ -157,7 +157,7 @@ const handleClosePopup = () => {
             </Stepper>
             <Box sx={{ marginTop: 3 }}>
                 <div >
-                    <h2>{currentStep.step}</h2>
+                    <h2 style={{color:"gray"}}>{currentStep.step}</h2>
                     <div>
                         {
                             currentStep.options.map((step, index) =>(
@@ -166,6 +166,7 @@ const handleClosePopup = () => {
                                 className={`option ${
                                 selectedOption === step.label ? "selected" : ""
                                 }`}
+                    
                                 onClick={() => handleOptionChange(currentStep.step,step.label)}
                                 style={{
                                 display: "flex",
@@ -175,6 +176,7 @@ const handleClosePopup = () => {
                                 padding: "10px",
                                 border: "1px solid #ccc",
                                 borderRadius: "5px",
+                                color: selectedOption === step.label ? "blue"  :"black",
                                 backgroundColor:
                                     selectedOption === step.label ? "#cce7ff" : "#fff",
                                 }}
@@ -194,18 +196,18 @@ const handleClosePopup = () => {
                     </div>
                     <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: 2 }}>
                     <Button
-                        variant="outlined"
+                        variant="contained"
                         disabled={currentStepIndex === 0}
                         onClick={handleBack}
                     >
                         Back
                     </Button>
                     {currentStepIndex === steps.length - 1 ? (
-                        <Button variant="contained" onClick={handleSubmit}>
+                        <Button variant="contained" onClick={handleSubmit} disabled={!selectedOption}>
                         Submit
                         </Button>
                     ) : (
-                        <Button variant="contained" onClick={handleNext}>
+                        <Button variant="contained" disabled={!selectedOption} onClick={handleNext}>
                         Next
                         </Button>
                     )}
