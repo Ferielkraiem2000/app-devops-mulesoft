@@ -337,24 +337,17 @@ const AppForm = () => {
             </div>
             <Box sx={{ margin: "auto", justifyContent: "center", alignItems: "center", display: "block", backgroundColor: "white", boxShadow: 3, padding: 3 }}>
                 <Stepper activeStep={currentStepIndex} alternativeLabel>
-                    {steps.map((label) => (
+                    {steps.map((label, index) => (
                         <Step key={label.id}>
-                            <StepLabel>{label.step}</StepLabel>
+                            <StepLabel>
+                                {label.step}
+                                <div style={{ fontSize: "0.8rem", color: "gray" }}>
+                                    {selectedOptions[index] || "Not selected yet"}
+                                </div>
+                            </StepLabel>
                         </Step>
                     ))}
                 </Stepper>
-                <Box sx={{ marginTop: 3 }}>
-                    <Typography variant="h6" color="textSecondary">
-                        Summary of Choices:
-                    </Typography>
-                    <ul>
-                        {steps.map((step, index) => (
-                            <li key={index}>
-                                <strong>{step.step}:</strong> {selectedOptions[index] || "Not selected yet"}
-                            </li>
-                        ))}
-                    </ul>
-                </Box>
                 <Box sx={{ marginTop: 3 }}>
                     <Typography variant="h5" gutterBottom>
                         {currentStep.step}
@@ -421,3 +414,4 @@ const AppForm = () => {
 };
 
 export default AppForm;
+
