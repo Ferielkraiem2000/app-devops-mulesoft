@@ -295,7 +295,7 @@ const AppForm = () => {
             ],
         },
     ];
-
+    const [orderDetails, setOrderDetails] = useState<any>(null);
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [selectedOptions, setSelectedOptions] = useState<string[]>(Array(steps.length).fill(""));
 
@@ -329,6 +329,7 @@ const AppForm = () => {
         try {
             const response = await axios.post("https://app-back-deploy.vercel.app/save-order", dataToSend);
             console.log(response.data);
+            setOrderDetails(dataToSend)
             setOpenPopup(true);
         } catch (error) {
             console.error("Error saving order:", error);
@@ -411,6 +412,21 @@ const AppForm = () => {
                     <DialogTitle>Order Submitted</DialogTitle>
                     <DialogContent>
                         <Typography>Your order has been submitted successfully and is now awaiting approval from the administrator.</Typography>
+                        <Typography variant="h6" mt={2}>
+            Order Details:
+        </Typography>
+        <Typography variant="body1">
+            Versioning Tool: {orderDetails?.versioningTool || "Not selected"}
+        </Typography>
+        <Typography variant="body1">
+            Hosting Type: {orderDetails?.hostingType || "Not selected"}
+        </Typography>
+        <Typography variant="body1">
+            Monitoring Tool: {orderDetails?.monitoringTool || "Not selected"}
+        </Typography>
+        <Typography variant="body1">
+            Hosting Jar Tool: {orderDetails?.hostingJarTool || "Not selected"}
+        </Typography>
                     </DialogContent>
                     <DialogActions>
                         <a href="/client">
