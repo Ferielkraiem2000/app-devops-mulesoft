@@ -349,7 +349,7 @@ const AppForm = () => {
                     <a href="/client"><FaHome className="text-gray-700 hover:text-blue-500 text-2xl" /></a>
                 </div>
                 <div className="mb-6">
-                    <a href="/command"><FaShoppingCart className="text-gray-700 hover:text-blue-500 text-2xl" /></a>
+                    <a href="/bookOrder"><FaShoppingCart className="text-gray-700 hover:text-blue-500 text-2xl" /></a>
                 </div>
             </div>
             <Box sx={{ margin: "auto", justifyContent: "center", alignItems: "center", display: "block", backgroundColor: "white", boxShadow: 3, padding: 3 }}>
