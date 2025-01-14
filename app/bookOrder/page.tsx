@@ -260,7 +260,7 @@ const AppForm = () => {
     const steps = [
         {
             id: 1,
-            step: "Choose Versioning Tool",
+            step: "Choisir l'outil de versioning",
             options: [
                 { label: "Github", icon: <SiGithub /> },
                 { label: "Gitlab", icon: <SiGitlab /> },
@@ -270,7 +270,7 @@ const AppForm = () => {
         },
         {
             id: 2,
-            step: "Choose Hosting Type",
+            step: "Choisir le type d'hébergement",
             options: [
                 { label: "Cloudhub2.0", icon: <MdCloud /> },
                 { label: "On-Premises", icon: <FaServer /> },
@@ -278,7 +278,7 @@ const AppForm = () => {
         },
         {
             id: 3,
-            step: "Choose Monitoring Tool",
+            step: "Choisir l'outil de monitoring",
             options: [
                 { label: "Grafana", icon: <GiChart /> },
                 { label: "ELK", icon: <FaChartLine /> },
@@ -288,7 +288,7 @@ const AppForm = () => {
         },
         {
             id: 4,
-            step: "Choose Hosting Jar Tool",
+            step: "Choisir l'outil d'hébergement du jar",
             options: [
                 { label: "Jfrog", icon: <SiJfrog /> },
                 { label: "Nexus", icon: <FaBox /> },
@@ -395,43 +395,43 @@ const AppForm = () => {
                     </div>
                     <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: 2 }}>
                         <Button variant="contained" disabled={currentStepIndex === 0} onClick={handleBack}>
-                            Back
+                        Précédent
                         </Button>
                         {currentStepIndex === steps.length - 1 ? (
                             <Button variant="contained" onClick={handleSubmit} disabled={!selectedOptions[currentStepIndex]}>
-                                Submit
+                                Soumettre
                             </Button>
                         ) : (
                             <Button variant="contained" onClick={handleNext} disabled={!selectedOptions[currentStepIndex]}>
-                                Next
+                                Suivant
                             </Button>
                         )}
                     </Box>
                 </Box>
                 <Dialog open={openPopup} onClose={handleClosePopup}>
-                    <DialogTitle>Order Submitted</DialogTitle>
+                    <DialogTitle>Commande Soumise</DialogTitle>
                     <DialogContent>
-                        <Typography>Your order has been submitted successfully and is now awaiting approval from the administrator.</Typography>
+                        <Typography>Votre commande a été soumise avec succès et est maintenant en attente d'approbation de l'administrateur.</Typography>
                         <Typography variant="h6" mt={2}>
-            Order Details:
+                        Détails de la commande :
+                        </Typography>
+        <Typography variant="body1">
+            Outil de versioning: {orderDetails?.versioningTool || "Not selected"}
         </Typography>
         <Typography variant="body1">
-            Versioning Tool: {orderDetails?.versioningTool || "Not selected"}
+            Type d'hébergement: {orderDetails?.hostingType || "Not selected"}
         </Typography>
         <Typography variant="body1">
-            Hosting Type: {orderDetails?.hostingType || "Not selected"}
+          Outil de monitoring: {orderDetails?.monitoringTool || "Not selected"}
         </Typography>
         <Typography variant="body1">
-            Monitoring Tool: {orderDetails?.monitoringTool || "Not selected"}
-        </Typography>
-        <Typography variant="body1">
-            Hosting Jar Tool: {orderDetails?.hostingJarTool || "Not selected"}
+        Outil d'hébergement du jar: {orderDetails?.hostingJarTool || "Not selected"}
         </Typography>
                     </DialogContent>
                     <DialogActions>
                         <a href="/client">
                             <Button onClick={handleClosePopup} color="primary">
-                                Close
+                                Fermer
                             </Button>
                         </a>
                     </DialogActions>
