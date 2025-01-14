@@ -153,7 +153,7 @@ const AppForm = () => {
                 <Step key={label.id}>
                     <StepLabel>{label.step}
                     <div style={{ fontSize: "0.8rem", color: "gray" }}>
-                                    {selectedOption|| "Not selected yet"}
+                                    {selectedOption[currentStepIndex]|| "Not selected yet"}
                                 </div>
 
                     </StepLabel>
