@@ -238,6 +238,7 @@
 import React, { useState } from "react";
 import { FaHome, FaShoppingCart } from "react-icons/fa";
 import { Box, Typography, Button, Stepper, Step, StepLabel, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import axios from "axios";
 
 const AppForm = () => {
@@ -414,4 +415,3 @@ const AppForm = () => {
 };
 
 export default AppForm;
-
