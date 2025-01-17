@@ -140,7 +140,7 @@ export default function OrdersPage() {
   const handleAcceptOrder = async (orderId: string) => {
     console.log(orderId)
     try {
-      const response = await axios.post(`https://app-back-deploy.vercel.app/accept-order/${orderId}`,{timeout: 30000});
+      const response = await axios.post(`https://app-back-deploy.vercel.app/accept-order/${orderId}`);
       console.log("Order accepted:", response.data);
       alert(`Order accepted! Repository URL: ${response.data.repoUrl}`);
     } catch (error) {
