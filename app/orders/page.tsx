@@ -1,123 +1,3 @@
-// "use client";
-// import axios from "axios";
-// import React, { useState, useEffect } from "react";
-// import { FaHome, FaBoxOpen, FaCog, FaSearch, FaUser, FaCheck, FaTimes } from "react-icons/fa";
-
-// export default function OrdersPage() {
-//   const [orders, setOrders] = useState([]);
-
-//   const getOrders = async () => {
-//     try {
-//       const response = await axios.get("https://app-back-deploy.vercel.app/orders");
-//       return response.data;
-//     } catch (error) {
-//       console.error("Error getting orders:", error);
-//       return [];
-//     }
-//   };
-
-//   useEffect(() => {
-//     const fetchOrders = async () => {
-//       const fetchedOrders = await getOrders();
-//       setOrders(fetchedOrders);
-//     };
-
-//     fetchOrders();
-//   }, []);
-
-//   return (
-//     <div className="flex min-h-screen bg-gray-100">
-//               <div className="w-20 bg-white shadow-md p-4 flex flex-col items-center">
-//                 <div className="mb-6">
-//                   <FaHome className="text-gray-700 hover:text-blue-500 text-2xl" />
-//                 </div>
-//                 <div className="mb-6">
-//                   <a href="/orders"><FaBoxOpen className="text-gray-700 hover:text-blue-500 text-2xl" /></a>
-//                 </div>
-//                 <div className="mb-6">
-//                   <FaUser className="text-gray-700 hover:text-blue-500 text-2xl" />
-//                 </div>
-//                 <div>
-//                   <FaCog className="text-gray-700 hover:text-blue-500 text-2xl" />
-//                 </div>
-//               </div>
-//       {/* Main Content */}
-//       <div className="flex-1 p-6">
-//         <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-md p-6">
-//           {/* Search Section */}
-//           <div className="mb-6 flex justify-between items-center">
-//             <h1 className="text-2xl font-bold" style={{ color: "black" }}>Commandes</h1>
-//             <div className="relative">
-//               <FaSearch className="absolute top-3 left-3 text-gray-400" />
-//               <input
-//                 type="text"
-//                 placeholder="Search..."
-//                 className="border border-gray-300 rounded-lg p-2 pl-10"
-//               />
-//             </div>
-//           </div>
-
-//           <div className="overflow-x-auto">
-//             <table className="w-full border-collapse">
-//               <thead>
-//                 <tr className="bg-gray-200 text-left">
-//                   <th className="p-3 border" style={{ color: "black" }}>Outil CI/CD</th>
-//                   <th className="p-3 border" style={{ color: "black" }}>Type d'hébergement</th>
-//                   <th className="p-3 border" style={{ color: "black" }}>Outil de monitoring</th>
-//                   <th className="p-3 border" style={{ color: "black" }}>Outil d'hébergement des JARs</th>
-//                   <th className="p-3 border" style={{ color: "black" }}>Décision</th>
-//                   <th className="p-3 border" style={{ color: "black" }}>Statut</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {orders.length > 0 ? (
-//                   orders.map((order: any, index: number) => (
-//                     <tr key={index} className="hover:bg-gray-100">
-//                       <td className="p-3 border text-gray-500">{order.versioningTool || "N/A"}</td>
-//                       <td className="p-3 border text-gray-500">{order.hostingType || "N/A"}</td>
-//                       <td className="p-3 border text-gray-500">{order.monitoringTool || "N/A"}</td>
-//                       <td className="p-3 border text-gray-500">{order.hostingJarTool || "N/A"}</td>
-//                       <td  className="p-3 border text-gray-500">
-//                       <div className="flex space-x-2">
-
-//                             <button
-//                             //   onClick={() => handleStatusChange(order.id, "confirmée")}
-//                               className="bg-green-500 text-white py-1 px-3 rounded flex items-center"
-//                             >
-//                               <FaCheck className="mr-2" /> 
-//                             </button>
-//                             <button
-//                             //   onClick={() => handleStatusChange(order.id, "annulée")}
-//                               className="bg-red-500 text-white py-1 px-3 rounded flex items-center"
-//       >
-//                               <FaTimes className="mr-2" /> 
-//                             </button>
-//                             </div>
-//                           </td>
-//                       <td className="p-3 border text-gray-500">
-//                       <span className={`py-1 px-3 rounded ${order.status === "en attente" ? "bg-yellow-500" : "bg-green-500"}`}>{order.status}</span>
-//                     </td>  
-
-//                   </tr>
-//                   ))
-//                 ) : (
-//                   <tr>
-//                     <td colSpan={5} className="p-3 border text-center">
-//                       No orders found.
-//                     </td>
-//                   </tr>
-//                 )}
-//               </tbody>
-//             </table>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
 "use client";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
@@ -126,7 +6,6 @@ import { FaHome, FaBoxOpen, FaCog, FaSearch, FaUser, FaCheck, FaTimes } from "re
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
 
-  // Fetch orders from the backend
   const getOrders = async () => {
     try {
       const response = await axios.get("https://app-back-deploy.vercel.app/orders");
@@ -162,7 +41,6 @@ export default function OrdersPage() {
     }
   };
 
-  // Fetch orders when the component mounts
   useEffect(() => {
     const fetchOrders = async () => {
       const fetchedOrders = await getOrders();

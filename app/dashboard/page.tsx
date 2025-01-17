@@ -20,7 +20,7 @@ export default function DashboardPage() {
                   <FaCog className="text-gray-700 hover:text-blue-500 text-2xl" />
                 </div>
               </div>
-              <h1 className="text-2xl font-bold p-6">Welcome to the Admin Dashboard</h1>
+              <h1 className="text-2xl font-bold p-6">Tableau De Bord</h1>
     </div>
   );
 }
