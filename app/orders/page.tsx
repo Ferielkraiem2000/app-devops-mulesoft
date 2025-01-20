@@ -184,6 +184,7 @@ import {
   FaUser,
   FaCheck,
   FaTimes,
+  FaSpinner,
 } from "react-icons/fa";
 
 export default function OrdersPage() {
@@ -191,7 +192,8 @@ export default function OrdersPage() {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 3;
+  const rowsPerPage = 5;
+  const [loading, setLoading] = useState(false);
 
   const getOrders = async () => {
     try {
@@ -205,32 +207,66 @@ export default function OrdersPage() {
     }
   };
 
+  // const handleAcceptOrder = async (orderId: string) => {
+  //   try {
+  //     const response = await axios.post(
+  //       `http://localhost:4000/accept-order/${orderId}`
+  //     );
+  //     alert(`Order accepted! Repository URL: ${response.data.repoUrl}`);
+  //   } catch (error) {
+  //     console.error("Error accepting order:", error);
+  //     alert("Error accepting order. Please try again.");
+  //   }
+  // };
   const handleAcceptOrder = async (orderId: string) => {
+    setLoading(true); // Show loading spinner
     try {
       const response = await axios.post(
-        `https://app-back-deploy.vercel.app/accept-order/${orderId}`
+        `http://localhost:4000/accept-order/${orderId}`
       );
-      alert(`Order accepted! Repository URL: ${response.data.repoUrl}`);
+      const repoUrl = response.data.repoUrl;
+      if (repoUrl) {
+        alert(`Order accepted! Repository URL: ${repoUrl}`);
+      } else {
+        alert("Order accepted, but repository URL is null.");
+      }
     } catch (error) {
       console.error("Error accepting order:", error);
       alert("Error accepting order. Please try again.");
+    } finally {
+      setLoading(false); 
     }
   };
-
+  // const handleCancelOrder = async (orderId: string) => {
+  //   try {
+  //     await axios.delete(
+  //       `https://app-back-deploy.vercel.app/delete-order/${orderId}`
+  //     );
+  //     const updatedOrders = await getOrders();
+  //     setOrders(updatedOrders);
+  //     setFilteredOrders(updatedOrders);
+  //     setCurrentPage(1); // Reset to the first page after deletion
+  //   } catch (error) {
+  //     console.error("Error deleting order:", error);
+  //   }
+  // };
   const handleCancelOrder = async (orderId: string) => {
-    try {
-      await axios.delete(
-        `https://app-back-deploy.vercel.app/delete-order/${orderId}`
-      );
-      const updatedOrders = await getOrders();
-      setOrders(updatedOrders);
-      setFilteredOrders(updatedOrders);
-      setCurrentPage(1); // Reset to the first page after deletion
-    } catch (error) {
-      console.error("Error deleting order:", error);
+    const isConfirmed = window.confirm("Êtes-vous sûr de vouloir annuler cette commande ?");
+    if (isConfirmed) {
+      try {
+        await axios.delete(
+          `https://app-back-deploy.vercel.app/delete-order/${orderId}`
+        );
+        const updatedOrders = await getOrders();
+        setOrders(updatedOrders);
+        setFilteredOrders(updatedOrders);
+        setCurrentPage(1); 
+      } catch (error) {
+        console.error("Erreur lors de la suppression de la commande :", error);
+      }
     }
   };
-
+  
   useEffect(() => {
     const fetchOrders = async () => {
       const fetchedOrders = await getOrders();
@@ -340,11 +376,22 @@ export default function OrdersPage() {
                       </td>
                       <td className="p-3 border text-gray-500">
                         <div className="flex space-x-2">
-                          <button
+                          {/* <button
                             onClick={() => handleAcceptOrder(order._id)}
                             className="bg-green-500 text-white py-1 px-3 rounded flex items-center"
                           >
                             <FaCheck className="mr-2" />
+                          </button> */}
+                      <button
+                            onClick={() => handleAcceptOrder(order._id)}
+                            className="bg-green-500 text-white py-1 px-3 rounded flex items-center"
+                          >
+                            {loading ? (
+                              <FaSpinner className="animate-spin mr-2" />
+                            ) : (
+                              <FaCheck className="mr-2" />
+                            )}
+                            {loading ? "Loading..." : ""}
                           </button>
                           <button
                             onClick={() => handleCancelOrder(order._id)}
@@ -378,30 +425,35 @@ export default function OrdersPage() {
             </table>
           </div>
 
-          {/* Pagination Controls */}
-          <div className="mt-4 flex justify-center space-x-2">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
-            >
-              Previous
-            </button>
-            <span className="px-3 py-1">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-              className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
-            >
-              Next
-            </button>
+{/* Pagination Controls */}
+{totalPages > 0 ? (
+  <div className="mt-4 flex justify-center space-x-2">
+    <button
+      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+      disabled={currentPage === 1}
+      className="bg-gray-300 px-3 py-1 rounded disabled:opacity-30"
+    >
+      Précédent
+    </button>
+    <span className="px-3 py-1">
+      Page {currentPage} sur {totalPages}
+    </span>
+    <button
+      onClick={() =>
+        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+      }
+      disabled={currentPage === totalPages}
+      className="bg-gray-300 px-3 py-1 rounded disabled:opacity-30"
+    >
+      Suivant
+    </button>
+  </div>
+) : (
+  <div className="mt-4 text-center text-gray-500">Aucune page disponible</div>
+)}
+
           </div>
         </div>
       </div>
-    </div>
   );
 }
