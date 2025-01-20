@@ -172,6 +172,7 @@
 //   );
 // }
 
+
 "use client";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
@@ -190,7 +191,7 @@ export default function OrdersPage() {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 3; // Maximum rows per page
+  const rowsPerPage = 3;
 
   const getOrders = async () => {
     try {
@@ -369,7 +370,7 @@ export default function OrdersPage() {
                 ) : (
                   <tr>
                     <td colSpan={6} className="p-3 border text-center">
-                      No orders found.
+                    Aucune commande trouvée.
                     </td>
                   </tr>
                 )}
