@@ -9,7 +9,6 @@ interface ProfileModalProps {
     workEmail: string;
   };
 }
-
 const ProfileModal: React.FC<ProfileModalProps> = ({ open, onClose, user }) => (
   <Dialog open={open} onClose={onClose}>
     <DialogTitle>Profil de l'utilisateur</DialogTitle>
