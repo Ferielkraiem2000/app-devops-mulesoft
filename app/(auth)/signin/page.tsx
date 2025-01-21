@@ -13,7 +13,7 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState(""); 
  
-
+  let customerId=""
   // const handleSubmit = async (e:any) => {
   //   e.preventDefault();
   //   setLoading(true);
@@ -96,7 +96,9 @@ export default function SignIn() {
           });
   
           const profileData = await profileResponse.json();
-          console.log("profile",profileData);
+          customerId=profileData._id;
+          localStorage.setItem('customerId', customerId);
+          console.log("ud",customerId);
           
           if (!profileResponse.ok) {
             setError(profileData.message || "Error fetching profile");
@@ -105,7 +107,7 @@ export default function SignIn() {
             if (email === "admin@admin.com") {
               window.location.href = "/admin";
             } else {
-              window.location.href = "/client";
+              window.location.href = "/bookOrder";
             }
           }
         }
@@ -119,7 +121,7 @@ export default function SignIn() {
       setLoading(false);
     }
   };
-  
+
   return (
     <section>
       <div className="mx-auto max-w-6xl px-4 sm:px-6">

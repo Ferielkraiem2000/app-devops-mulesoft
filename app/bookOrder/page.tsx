@@ -217,7 +217,7 @@
 
 "use client";
 import React, { useState } from "react";
-import { FaCheckCircle, FaHome, FaShoppingCart, FaBell, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
+import { FaCheckCircle, FaHome, FaShoppingCart, FaBell, FaUserCircle, FaSignOutAlt, FaClipboardList } from "react-icons/fa";
 import { SiGithub, SiGitlab, SiBitbucket } from "react-icons/si";
 import { FaMicrosoft } from "react-icons/fa";
 import { MdCloud } from "react-icons/md";
@@ -311,22 +311,20 @@ const AppForm = () => {
     //     }
     // };
     const handleSubmit = async () => {
-        if (!user) {
-            console.error("User not found");
-            return; // Return early if user data is not available
-        }
-       console.log(user)
+        const customerId = localStorage.getItem("customerId");  
+        console.log("customerId:", customerId);
         const dataToSend = {
             versioningTool: selectedOptions[0],
             hostingType: selectedOptions[1],
             monitoringTool: selectedOptions[2],
             hostingJarTool: selectedOptions[3],
             status: "en attente",
-            customerId: user, 
+            customerId: customerId,
         };
     
         try {
-            const response = await axios.post("https://app-back-deploy.vercel.app/save-order", dataToSend);
+            
+            const response = await axios.post("http://localhost:4000/save-order", dataToSend);
             console.log(response.data);
             setOrderDetails(dataToSend);
             setOpenPopup(true);
@@ -338,14 +336,13 @@ const AppForm = () => {
     const handleClosePopup = () => {
         setOpenPopup(false);
     };
-
     const currentStep = steps[currentStepIndex];
     const [openProfile, setOpenProfile] = useState(false);
     const [user, setUser] = useState(null);
     const handleProfileClick = async () => {
         try {
           const token = localStorage.getItem("token");  
-          console.log("Token:", token);
+
       
           if (!token) {
             console.error("Token not found, redirecting to login...");
@@ -359,9 +356,9 @@ const AppForm = () => {
           });
       
           console.log("User Profile:", response.data);
-      
+
           setUser(response.data);
-      
+
           setOpenProfile(true);
       
         } catch (error) {
@@ -411,7 +408,7 @@ const AppForm = () => {
             <div className="flex flex-1">
                 <div className="w-20 bg-white shadow-md p-4 flex flex-col items-center">
                 <div className="mb-6" style={{ position: 'relative', top: '-40px' }}>
-    <a href="/client">
+    <a href="/">
         <FaHome className="text-gray-700 hover:text-blue-500 text-2xl" />
     </a>
 </div>
@@ -421,7 +418,10 @@ const AppForm = () => {
                             <FaShoppingCart className="text-gray-700 hover:text-blue-500 text-2xl" />
                         </a>
                     </div>
-                </div>
+                    <div className="mb-6" style={{ position: 'relative', top: '-40px' }}>
+                       <a href="/clientOrders"><FaClipboardList className="text-gray-700 hover:text-blue-500 text-2xl" /></a>
+       </div>
+                </div> 
                 <Box
                     sx={{
                         margin: "auto",

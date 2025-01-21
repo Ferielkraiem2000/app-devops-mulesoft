@@ -22,5 +22,6 @@ export default function DashboardPage() {
               </div>
               <h1 className="text-2xl font-bold p-6">Tableau De Bord</h1>
     </div>
+    
   );
 }
