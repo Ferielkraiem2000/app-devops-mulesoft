@@ -14,13 +14,60 @@ export default function SignIn() {
   const [successMessage, setSuccessMessage] = useState(""); 
  
 
-  const handleSubmit = async (e:any) => {
+  // const handleSubmit = async (e:any) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   setError("");
+  //   setSuccessMessage("");
+  //   try {
+  //     const response = await fetch("https://app-back-deploy.vercel.app/signin", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         workEmail: email,
+  //         password: password,
+  //       }),
+        
+  //     });
+
+  //     const data = await response.json();
+  //     // const token = data.token;
+  //     // console.log("data******",data);
+
+  //     // if (token) {
+  //     //   localStorage.setItem('token', token);
+  //     //   window.location.href = '/bookOrder'; 
+  //     //   console.log("token",token);
+
+  //     // }
+  //     if (!response.ok) {
+  //       setError(data.message || "An error occurred");
+  //     } else {
+  //       setSuccessMessage("Sign in successful!"); 
+  //       console.log("Sign in successful:", data);
+
+  //       if(email=="admin@admin.com"){
+  //       window.location.href = "/admin"; }
+  //       else{
+  //         window.location.href = "/client"; }
+  //        }
+  //     } catch (err) {
+  //     setError("Erreur serveur, veuillez réessayer.");
+  //     console.log(err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     setSuccessMessage("");
+  
     try {
-      const response = await fetch("https://app-back-deploy.vercel.app/signin", {
+      const response = await fetch("http://localhost:4000/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,26 +77,49 @@ export default function SignIn() {
           password: password,
         }),
       });
-
+  
       const data = await response.json();
+      // console.log(data.token)
       if (!response.ok) {
         setError(data.message || "An error occurred");
       } else {
-        setSuccessMessage("Sign in successful!"); 
-        console.log("Sign in successful:", data);
-        if(email=="admin@admin.com"){
-        window.location.href = "/admin"; }
-        else{
-          window.location.href = "/client"; }
+        const token = data.token;
+        
+        if (token) {
+          localStorage.setItem('token', token);
+          console.log(token);
+          const profileResponse = await fetch("http://localhost:4000/profile", {
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${token}`,  
+            },
+          });
+  
+          const profileData = await profileResponse.json();
+          console.log("profile",profileData);
+          
+          if (!profileResponse.ok) {
+            setError(profileData.message || "Error fetching profile");
+          } else {
+            console.log("User profile fetched:", profileData);
+            if (email === "admin@admin.com") {
+              window.location.href = "/admin";
+            } else {
+              window.location.href = "/client";
+            }
+          }
         }
-      } catch (err) {
+        setSuccessMessage("Sign in successful!");
+        console.log("Sign in successful:", data);
+      }
+    } catch (err) {
       setError("Erreur serveur, veuillez réessayer.");
       console.log(err);
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <section>
       <div className="mx-auto max-w-6xl px-4 sm:px-6">

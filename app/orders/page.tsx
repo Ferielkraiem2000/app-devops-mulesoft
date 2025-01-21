@@ -189,11 +189,13 @@ import {
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
+  // const [orders, setOrders] = useState<any[]>([]); // Initial state as an empty array
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5;
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  const [loadingOrderId, setLoadingOrderId] = useState<string | null>(null);
 
   const getOrders = async () => {
     try {
@@ -218,14 +220,17 @@ export default function OrdersPage() {
   //     alert("Error accepting order. Please try again.");
   //   }
   // };
-  const handleAcceptOrder = async (orderId: string) => {
-    setLoading(true); // Show loading spinner
+  const handleAcceptOrder = async (order:any) => {
+    // setLoading(true); 
+    setLoadingOrderId(order._id); 
+
     try {
       const response = await axios.post(
-        `http://localhost:4000/accept-order/${orderId}`
+        `http://localhost:4000/accept-order/${order._id}`
       );
       const repoUrl = response.data.repoUrl;
       if (repoUrl) {
+        order.status="acceptée"
         alert(`Order accepted! Repository URL: ${repoUrl}`);
       } else {
         alert("Order accepted, but repository URL is null.");
@@ -234,35 +239,27 @@ export default function OrdersPage() {
       console.error("Error accepting order:", error);
       alert("Error accepting order. Please try again.");
     } finally {
-      setLoading(false); 
+      // setLoading(false); 
+      setLoadingOrderId(null);
     }
   };
-  // const handleCancelOrder = async (orderId: string) => {
-  //   try {
-  //     await axios.delete(
-  //       `https://app-back-deploy.vercel.app/delete-order/${orderId}`
-  //     );
-  //     const updatedOrders = await getOrders();
-  //     setOrders(updatedOrders);
-  //     setFilteredOrders(updatedOrders);
-  //     setCurrentPage(1); // Reset to the first page after deletion
-  //   } catch (error) {
-  //     console.error("Error deleting order:", error);
-  //   }
-  // };
+
   const handleCancelOrder = async (orderId: string) => {
     const isConfirmed = window.confirm("Êtes-vous sûr de vouloir annuler cette commande ?");
     if (isConfirmed) {
       try {
-        await axios.delete(
+        const response = await axios.delete(
           `https://app-back-deploy.vercel.app/delete-order/${orderId}`
         );
-        const updatedOrders = await getOrders();
-        setOrders(updatedOrders);
-        setFilteredOrders(updatedOrders);
-        setCurrentPage(1); 
+        if (response.status === 200) {
+          const updatedOrders = await getOrders();
+          setOrders(updatedOrders);
+          setFilteredOrders(updatedOrders);
+          setCurrentPage(1); 
+        }
+        alert("Commande annulée avec succès !");
       } catch (error) {
-        console.error("Erreur lors de la suppression de la commande :", error);
+        console.error("Erreur lors de l'annulation de la commande :", error);
       }
     }
   };
@@ -382,9 +379,13 @@ export default function OrdersPage() {
                           >
                             <FaCheck className="mr-2" />
                           </button> */}
-                      <button
-                            onClick={() => handleAcceptOrder(order._id)}
-                            className="bg-green-500 text-white py-1 px-3 rounded flex items-center"
+                      {/* <button
+                            onClick={() => handleAcceptOrder(order)}
+                            className={`${
+                              order.status === "acceptée"
+                                ? "bg-gray-300 cursor-not-allowed"
+                                : "bg-green-500"
+                            } text-white py-1 px-3 rounded flex items-center`}                            disabled={order.status === "acceptée"}
                           >
                             {loading ? (
                               <FaSpinner className="animate-spin mr-2" />
@@ -392,10 +393,31 @@ export default function OrdersPage() {
                               <FaCheck className="mr-2" />
                             )}
                             {loading ? "Loading..." : ""}
-                          </button>
+                          </button> */}
+                                        <button
+                onClick={() => handleAcceptOrder(order)}
+                className={`${
+                  order.status === "acceptée"
+                    ? "bg-gray-300 cursor-not-allowed"
+                    : "bg-green-500"
+                } text-white py-1 px-3 rounded flex items-center`}
+                disabled={order.status === "acceptée" || loadingOrderId === order._id} // Disable while loading
+              >
+                {loadingOrderId === order._id ? ( // Show spinner only for the specific order
+                  <FaSpinner className="animate-spin mr-2" />
+                ) : (
+                  <FaCheck className="mr-2" />
+                )}
+                {/* {loadingOrderId === order._id ? "Loading..." : ""} */}
+              </button>
                           <button
                             onClick={() => handleCancelOrder(order._id)}
-                            className="bg-red-500 text-white py-1 px-3 rounded flex items-center"
+                            className={`${
+                              order.status === "acceptée"
+                                ? "bg-gray-300 cursor-not-allowed"
+                                : "bg-red-500"
+                            } text-white py-1 px-3 rounded flex items-center`}                            disabled={order.status === "acceptée" || loadingOrderId === order._id} // Disable while loading
+
                           >
                             <FaTimes className="mr-2" />
                           </button>
@@ -427,30 +449,44 @@ export default function OrdersPage() {
 
 {/* Pagination Controls */}
 {totalPages > 0 ? (
-  <div className="mt-4 flex justify-center space-x-2">
+  <div className="mt-4 flex justify-center space-x-2 items-center">
+    {/* Previous Button */}
     <button
       onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
       disabled={currentPage === 1}
-      className="bg-gray-300 px-3 py-1 rounded disabled:opacity-30"
+      className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
     >
-      Précédent
+      &lt; {/* Left Arrow */}
     </button>
-    <span className="px-3 py-1">
-      Page {currentPage} sur {totalPages}
-    </span>
+
+    {/* Page Numbers */}
+    {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+      <button
+        key={page}
+        onClick={() => setCurrentPage(page)}
+        className={`px-3 py-1 rounded ${
+          currentPage === page
+            ? "bg-blue-500 text-white"
+            : "bg-gray-200 text-gray-700"
+        }`}
+      >
+        {page}
+      </button>
+    ))}
+
+    {/* Next Button */}
     <button
-      onClick={() =>
-        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-      }
+      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
       disabled={currentPage === totalPages}
-      className="bg-gray-300 px-3 py-1 rounded disabled:opacity-30"
+      className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
     >
-      Suivant
+      &gt; {/* Right Arrow */}
     </button>
   </div>
 ) : (
   <div className="mt-4 text-center text-gray-500">Aucune page disponible</div>
 )}
+
 
           </div>
         </div>
