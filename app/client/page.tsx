@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { FaHome, FaShoppingCart} from "react-icons/fa";
+import { FaClipboardList, FaHome, FaShoppingCart} from "react-icons/fa";
 
 
 export default function ClientPage() {
@@ -22,12 +22,9 @@ export default function ClientPage() {
         <div className="mb-6">
           <a href="/bookOrder"><FaShoppingCart className="text-gray-700 hover:text-blue-500 text-2xl" /></a>
         </div>
-        {/* <div className="mb-6">
-          <FaUser className="text-gray-700 hover:text-blue-500 text-2xl" />
-        </div> */}
-        {/* <div>
-          <FaCog className="text-gray-700 hover:text-blue-500 text-2xl" />
-        </div> */}
+        <div className="mb-6">
+        <a href="/ClientOrders"><FaClipboardList className="text-gray-700 hover:text-blue-500 text-2xl" /></a>
+        </div>
 
       </div>
 
