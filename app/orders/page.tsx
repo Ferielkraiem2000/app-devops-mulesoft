@@ -501,6 +501,7 @@
 //       </div>
 //   );
 // }
+
 "use client"
 import axios from "axios";
 import React, { useState, useEffect } from "react";
@@ -525,6 +526,7 @@ const OrdersPage = () =>  {
 
   const getCustomerName = async (customerId:any) => {
     try {
+      console.log("id",customerId)
       const response = await axios.get(
         `http://localhost:4000/customer/${customerId}`
       );
@@ -534,7 +536,6 @@ const OrdersPage = () =>  {
       return "N/A";
     }
   };
-
   const getOrders = async () => {
     try {
       const response = await axios.get(
@@ -542,30 +543,76 @@ const OrdersPage = () =>  {
       );
       const ordersWithCustomerNames = await Promise.all(
         response.data.map(async (order:any) => {
+          console.log("test",order.customerId);
+          
           const customerName = await getCustomerName(order.customerId);
+          console.log(customerName)
           return { ...order, customerName };
         })
       );
+      console.log(ordersWithCustomerNames);
+      
       return ordersWithCustomerNames;
     } catch (error) {
       console.error("Error getting orders:", error);
       return [];
     }
   };
+  // const getOrders = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "https://app-back-deploy.vercel.app/orders"
+  //     );
+  //     const ordersWithCustomerNames = await Promise.all(
+  //       response.data.map(async (order:any) => {
+  //         const customerName = await getCustomerName(order.customerId);
+  //         return { ...order, customerName };
+  //       })
+  //     );
+  //     return ordersWithCustomerNames;
+  //   } catch (error) {
+  //     console.error("Error getting orders:", error);
+  //     return [];
+  //   }
+  // };
   const handleAcceptOrder = async (orderId: string) => {
-    console.log(orderId)
+    setLoadingOrderId(orderId); // Set loading state for the specific order
     try {
-      const response = await axios.post(`https://app-back-deploy.vercel.app/accept-order/${orderId}`);
+      const response = await axios.post(`http://localhost:4000/accept-order/${orderId}`);
       console.log("Order accepted:", response.data);
+      
       alert(`Order accepted! Repository URL: ${response.data.repoUrl}`);
     } catch (error) {
       console.error("Error accepting order:", error);
       alert("Error accepting order. Please try again.");
+    } finally {
+      setLoadingOrderId(null); // Reset loading state
+    }
+  };
+
+    const handleCancelOrder = async (order: any) => {
+    const isConfirmed = window.confirm("Êtes-vous sûr de vouloir annuler cette commande ?");
+    if (isConfirmed) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:4000/delete-order/${order._id}`
+        );
+        if (response.status === 200) {
+          order.status="annulée"
+          const updatedOrders:any = await getOrders();
+          setOrders(updatedOrders);
+          setFilteredOrders(updatedOrders);
+          setCurrentPage(1); 
+        }
+        alert("Commande annulée avec succès !");
+      } catch (error) {
+        console.error("Erreur lors de l'annulation de la commande :", error);
+      }
     }
   };
   useEffect(() => {
     const fetchOrders = async () => {
-      const fetchedOrders:any = await getOrders();
+      const fetchedOrders: any = await getOrders();
       setOrders(fetchedOrders);
       setFilteredOrders(fetchedOrders);
     };
@@ -588,10 +635,9 @@ const OrdersPage = () =>  {
 
   const totalPages = Math.ceil(filteredOrders.length / rowsPerPage);
 
-  return (
+    return (
     <div className="flex min-h-screen bg-gray-100">
       <div className="w-20 bg-white shadow-md p-4 flex flex-col items-center">
-        {/* Sidebar */}
         <div className="mb-6">
           <FaHome className="text-gray-700 hover:text-blue-500 text-2xl" />
         </div>
@@ -633,7 +679,7 @@ const OrdersPage = () =>  {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-gray-200 text-left">
-                  <th className="p-3 border" style={{ color: "black" }}>
+                <th className="p-3 border" style={{ color: "black" }}>
                     Nom du Client
                   </th>
                   <th className="p-3 border" style={{ color: "black" }}>
@@ -658,11 +704,11 @@ const OrdersPage = () =>  {
               </thead>
               <tbody>
                 {currentOrders.length > 0 ? (
-                  currentOrders.map((order:any, index:any) => (
+                  currentOrders.map((order: any, index: number) => (
                     <tr key={index} className="hover:bg-gray-100">
-                      <td className="p-3 border text-gray-500">
-                        {order.customerName || "N/A"}
-                      </td>
+                    <td className="p-3 border text-gray-500">
+                    {order.customerId.name || "N/A"}
+                    </td>
                       <td className="p-3 border text-gray-500">
                         {order.versioningTool || "N/A"}
                       </td>
@@ -676,12 +722,56 @@ const OrdersPage = () =>  {
                         {order.hostingJarTool || "N/A"}
                       </td>
                       <td className="p-3 border text-gray-500">
-                        <button
-                          onClick={() => handleAcceptOrder(order)}
-                          className="bg-green-500 text-white py-1 px-3 rounded"
-                        >
-                          <FaCheck className="mr-2" />
-                        </button>
+                        <div className="flex space-x-2">
+                          {/* <button
+                            onClick={() => handleAcceptOrder(order._id)}
+                            className="bg-green-500 text-white py-1 px-3 rounded flex items-center"
+                          >
+                            <FaCheck className="mr-2" />
+                          </button> */}
+                      {/* <button
+                            onClick={() => handleAcceptOrder(order)}
+                            className={`${
+                              order.status === "acceptée"
+                                ? "bg-gray-300 cursor-not-allowed"
+                                : "bg-green-500"
+                            } text-white py-1 px-3 rounded flex items-center`}                            disabled={order.status === "acceptée"}
+                          >
+                            {loading ? (
+                              <FaSpinner className="animate-spin mr-2" />
+                            ) : (
+                              <FaCheck className="mr-2" />
+                            )}
+                            {loading ? "Loading..." : ""}
+                          </button> */}
+                                        <button
+                onClick={() => handleAcceptOrder(order._id)}
+                className={`${
+                  order.status === "acceptée"
+                    ? "bg-gray-300 cursor-not-allowed"
+                    : "bg-green-500"
+                } text-white py-1 px-3 rounded flex items-center`}
+                disabled={order.status === "acceptée" || loadingOrderId === order._id} // Disable while loading
+              >
+                {loadingOrderId === order._id ? ( // Show spinner only for the specific order
+                  <FaSpinner className="animate-spin mr-2" />
+                ) : (
+                  <FaCheck className="mr-2" />
+                )}
+                {/* {loadingOrderId === order._id ? "Loading..." : ""} */}
+              </button>
+                          <button
+                            onClick={() => handleCancelOrder(order)}
+                            className={`${
+                              order.status === "acceptée"
+                                ? "bg-gray-300 cursor-not-allowed"
+                                : "bg-red-500"
+                            } text-white py-1 px-3 rounded flex items-center`}                            disabled={order.status === "acceptée" || loadingOrderId === order._id} // Disable while loading
+
+                          >
+                            <FaTimes className="mr-2" />
+                          </button>
+                        </div>
                       </td>
                       <td className="p-3 border text-gray-500">
                         <span
@@ -698,8 +788,8 @@ const OrdersPage = () =>  {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={7} className="p-3 border text-center">
-                      Aucune commande trouvée.
+                    <td colSpan={6} className="p-3 border text-center">
+                    Aucune commande trouvée.
                     </td>
                   </tr>
                 )}
@@ -707,41 +797,51 @@ const OrdersPage = () =>  {
             </table>
           </div>
 
-          {/* Pagination Controls */}
-          <div className="mt-4 flex justify-center space-x-2 items-center">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
-            >
-              &lt;
-            </button>
-            {Array.from({ length: totalPages }, (_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentPage(index + 1)}
-                className={`px-3 py-1 rounded ${
-                  currentPage === index + 1
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-300"
-                }`}
-              >
-                {index + 1}
-              </button>
-            ))}
-            <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-              className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
-            >
-              &gt;
-            </button>
+{/* Pagination Controls */}
+{totalPages > 0 ? (
+  <div className="mt-4 flex justify-center space-x-2 items-center">
+    {/* Previous Button */}
+    <button
+      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+      disabled={currentPage === 1}
+      className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+    >
+      &lt; {/* Left Arrow */}
+    </button>
+
+    {/* Page Numbers */}
+    {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+      <button
+        key={page}
+        onClick={() => setCurrentPage(page)}
+        className={`px-3 py-1 rounded ${
+          currentPage === page
+            ? "bg-blue-500 text-white"
+            : "bg-gray-200 text-gray-700"
+        }`}
+      >
+        {page}
+      </button>
+    ))}
+
+    {/* Next Button */}
+    <button
+      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+      disabled={currentPage === totalPages}
+      className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+    >
+      &gt; {/* Right Arrow */}
+    </button>
+  </div>
+) : (
+  <div className="mt-4 text-center text-gray-500">Aucune page disponible</div>
+)}
+
+
           </div>
         </div>
       </div>
-    </div>
   );
 }
+
 export default OrdersPage;
