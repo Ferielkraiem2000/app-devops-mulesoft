@@ -501,6 +501,50 @@ const AppForm = () => {
                             )}
                         </Box>
                     </Box>
+                    <Dialog open={openPopup} onClose={handleClosePopup}>
+            <DialogTitle sx={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1c6ed6' }}>
+                <FaCheckCircle style={{ color: '#1c6ed6', marginRight: '8px' }} />
+                Commande Soumise
+            </DialogTitle>
+            <DialogContent sx={{
+                padding: '20px', 
+                backgroundColor: '#f1f9ff', 
+                borderRadius: '8px', 
+                color: '#333',
+                boxShadow: '0px 4px 6px rgba(0,0,0,0.1)',
+                lineHeight: 1.6
+            }}>
+                <Typography variant="body1" sx={{ marginBottom: '16px' }}>
+                    Votre commande a été soumise avec succès et est maintenant en attente d'approbation de l'administrateur.
+                </Typography>
+                <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#007bff' }}>
+                    Détails de la commande :
+                </Typography>
+                <Typography variant="body1" sx={{ marginBottom: '8px' }}>
+                    <strong>Outil de versioning</strong> : {orderDetails?.versioningTool || "Non sélectionné"}
+                </Typography>
+                <Typography variant="body1" sx={{ marginBottom: '8px' }}>
+                    <strong>Type d'hébergement</strong> : {orderDetails?.hostingType || "Non sélectionné"}
+                </Typography>
+                <Typography variant="body1" sx={{ marginBottom: '8px' }}>
+                    <strong>Outil de surveillance</strong> : {orderDetails?.monitoringTool || "Non sélectionné"}
+                </Typography>
+                <Typography variant="body1" sx={{ marginBottom: '16px' }}>
+                    <strong>Outil d'hébergement du jar</strong> : {orderDetails?.hostingJarTool || "Non sélectionné"}
+                </Typography>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClosePopup} color="primary" sx={{
+                    backgroundColor: '#007bff', 
+                    color: '#fff', 
+                    '&:hover': {
+                        backgroundColor: '#0056b3'
+                    }
+                }}>
+                    Fermer
+                </Button>
+            </DialogActions>
+        </Dialog>
                 </Box>
             </div>
         </div>
